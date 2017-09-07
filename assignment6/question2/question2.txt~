@@ -1,0 +1,5 @@
+import it.nerdammer.spark.hbase._
+
+val rawRDD = sc.hbaseTable[(String)]("trip_data").select("EndStation").inColumnFamily("data").map(x => (x,1))
+val reduceRDD = rawRDD.reduceByKey((a,b) => a+b).sortBy(x => -1*x._2)
+reduceRDD.take(10)

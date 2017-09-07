@@ -1,0 +1,17 @@
+def get_avg(rating:Iterable[String]): Double = {
+  var count:Double = 0.0
+  var num:Double = 0.0;
+  var it = rating.iterator
+  while(it.hasNext){
+    count = count + it.next().toDouble
+    num = num +1.0;
+  }
+  count/num
+}
+val name = readLine("name> ")
+val u_file = sc.textFile("/FileStore/tables/ggz3yfwe1498856689158/user.csv")
+val r_file = sc.textFile("/FileStore/tables/i0f0z79f1498853210311/review.csv")
+val u_rows = u_file.map(_.split('^')).filter(x => x(1) == name).map(x=> (x(0),x(1)))
+val r_rows = r_file.map(_.split('^')).map(l => (l(1),l(3)))
+val join_data = u_rows.join(r_rows).map(x=> x._2)
+val avg_rating = join_data.groupByKey().map(x => (x._1,get_avg(x._2))).collect().foreach(x => println(x._1 + "\t" + x._2))

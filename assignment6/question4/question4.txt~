@@ -1,0 +1,5 @@
+import it.nerdammer.spark.hbase._
+
+val rawRDD = sc.hbaseTable[(String,String)]("trip_data").select("ZipCode","StartStation").inColumnFamily("data").map(x => (x._1,x._2)).distinct().filter(x=> x._1 != "nil").map(x => (x._1,1))
+val reduceRDD = rawRDD.reduceByKey((a,b) => a+b).sortBy(x => -1*x._2)
+reduceRDD.take(1).foreach(println)

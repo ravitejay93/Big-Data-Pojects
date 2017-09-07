@@ -1,0 +1,6 @@
+import it.nerdammer.spark.hbase._
+
+val sqlContext= new org.apache.spark.sql.SQLContext(sc)
+val rawRDD = sc.hbaseTable[(String)]("trip_data").select("Duration").inColumnFamily("data").filter(x=> x forall Character.isDigit).map(x => (x.toInt,1))
+val rawDF = sqlContext.createDataFrame(rawRDD)
+rawDF.describe("_1").show()

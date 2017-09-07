@@ -1,0 +1,10 @@
+1) Run the following commnads to set the environment for spark
+
+curl -o spark-hbase-connector.jar http://central.maven.org/maven2/it/nerdammer/bigdata/spark-hbase-connector_2.10/0.9.2/spark-hbase-connector_2.10-0.9.2.jar
+
+2) Open Spark shell using the following command
+
+spark-shell --jars spark-hbase-connector.jar
+
+3) Run scala commands for each question in the answer folder available for each question.
+Output for each question is available in the folders for each question

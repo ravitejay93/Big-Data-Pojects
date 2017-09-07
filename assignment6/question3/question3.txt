@@ -1,0 +1,6 @@
+import it.nerdammer.spark.hbase._
+
+val rawRDD = sc.hbaseTable[(String,String)]("trip_data").select("StartStation","Duration").inColumnFamily("data").map(x=>(x._1,x._2))
+val durationRDD = rawRDD.filter(x=>x._2 forall Character.isDigit).map(x=>(x._1,(x._2.toInt,1)))
+val reduceRDD = durationRDD.reduceByKey((a,b) => (a._1+b._1,a._2+b._2)).map(x=>(x._1,x._2._1/x._2._2)).sortBy(x => -1*x._2)
+reduceRDD.take(10).foreach(println)

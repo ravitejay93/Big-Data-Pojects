@@ -1,0 +1,52 @@
+1) Download the file from the url
+
+http://www.utdallas.edu/~axn112530/cs6350/data/bikeShare/201508_trip_data.csv
+
+2) Run docker using the following command.
+
+sudo docker run --hostname=quickstart.cloudera --privileged=true -t -i -p 127.0.0.1:8888:8888 cloudera/quickstart /usr/bin/docker-quickstart
+
+3) Open 127.0.0.1:8888 in the browser. Login to the interface and upload the downloaded file into the location /user/cloudera/
+
+4) Open Hbase shell in the Docker using the following command
+
+hbase shell
+
+5) Create a table in hbase using the following command
+
+create 'trip_data', 'data'
+
+6)Exit the hbase and open pig using the following command
+
+pig
+
+7) Run the following code to get the data into the hbase table
+
+events = LOAD '/user/cloudera/201508_trip_data.csv' USING PigStorage(',') AS(
+id:chararray,
+Duration:chararray,
+StartDate:chararray,
+StartStation:chararray,
+StartTerminal:chararray, 
+EndDate: chararray,
+EndStation: chararray,
+EndTerminal: chararray,
+BikeNo:chararray,
+SubscriberType:chararray,
+ZipCode:chararray);
+
+STORE events INTO 'hbase://trip_data' USING org.apache.pig.backend.hadoop.hbase.HBaseStorage(
+'data:Duration,
+data:StartDate,
+data:StartStation,
+data:StartTerminal, 
+data:EndDate,
+data:EndStation,
+data:EndTerminal,
+data:BikeNo,
+data:SubscriberType,
+data:ZipCode'
+);
+
+8) Exit te pig.
+ 
